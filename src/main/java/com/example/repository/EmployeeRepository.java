@@ -1,5 +1,6 @@
 package com.example.repository;
 
+import com.example.domain.Administrator;
 import com.example.domain.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -54,7 +55,17 @@ public class EmployeeRepository {
 
         return developmentList;
     }
-
+    /**
+     * Administratorオブジェクトを生成するローマッパー.
+     */
+    private static final RowMapper<Administrator> ADMINISTRATOR_ROW_MAPPER = (rs, i) -> {
+        Administrator administrator = new Administrator();
+        administrator.setId(rs.getInt("id"));
+        administrator.setName(rs.getString("name"));
+        administrator.setMailAddress(rs.getString("mail_address"));
+        administrator.setPassword(rs.getString("password"));
+        return administrator;
+    };
     /**
      * 主キーから従業員情報を取得します.
      *

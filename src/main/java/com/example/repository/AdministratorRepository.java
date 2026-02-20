@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,7 +77,15 @@ public class AdministratorRepository {
         String sql = "insert into administrators(name,mail_address,password)values(:name,:mailAddress,:password);";
         template.update(sql, param);
     }
-
+    public List<UserDto> getUserDetails(List<Long> userIds) {
+        List<UserDto> dtos = new ArrayList<>();
+        for (Long id : userIds) {
+            // ループの中で毎回DBを叩いている（N+1問題）
+            User user = userRepository.findById(id).orElseThrow();
+            dtos.add(new UserDto(user.getName(), user.getEmail()));
+        }
+        return dtos;
+    }
     /**
      * メールアドレスから管理者情報を取得します.
      *
